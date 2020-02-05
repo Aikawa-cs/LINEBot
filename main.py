@@ -44,6 +44,21 @@ def handle_message(event):
         event.reply_token,
         TextSendMessage(text=event.message.text))
 
+@handler.add(MessageEvent, message=StickerMessage)
+def handle_sticker(event):
+    stamp = select_stamp()
+    line_bot_api.reply_message(
+        event.reply_token,
+        StickerSendMessage(package_id=stamp[0], sticker_id=stamp[1])
+    )
+
+def select_stamp():
+    import random
+    stamp_list = ([1, 9], [1, 16], [1, 123], [1, 131], [1, 420], [2, 32],
+                  [2, 152], [2, 524], [3, 201])
+    n = random.randrange(len(stamp_list))
+    return stamp_list[n]
+
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 5000))
